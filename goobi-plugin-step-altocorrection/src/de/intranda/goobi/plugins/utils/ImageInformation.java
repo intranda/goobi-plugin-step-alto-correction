@@ -27,15 +27,7 @@ public class ImageInformation {
 	
 	private String basename;
 
-	// public static void main(String[] args) {
-	// ImageInformation i = null;
-	// try {
-	// i = getInformation(new File(args[0]));
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
+
 
 	/**
 	 * Returns the ImageInformation of two images, where density is of the small image and alpha is the angle by which the small image was rotated
@@ -76,11 +68,7 @@ public class ImageInformation {
 				imagereader.setInput(iis, true); // set the ImageInputStream as
 				tiffDirectory = TIFFDirectory.createFromMetadata(imagereader.getImageMetadata(0));
 
-			} catch (IOException ioe) {
-				// TODO: mieser catch block
-				ioe.printStackTrace();
 			} catch (Exception e) {
-				// TODO: mieser catch block
 				e.printStackTrace();
 			} finally {
 				stream.close();
