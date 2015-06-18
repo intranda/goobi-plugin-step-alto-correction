@@ -167,7 +167,6 @@
 
 	<!-- Run all targets in appropiate order for clean compile-->
 	<target name="dist" depends="clean, createDirs, git.revision, jar.runnable" description="Creating everything for Jenkins." >
-	    <copy tofile="${dir.deploy}/plugin_DisplayMetadataPlugin.xml" file="plugin_DisplayMetadataPlugin.xml" />
 	    
 	    </target>
 
