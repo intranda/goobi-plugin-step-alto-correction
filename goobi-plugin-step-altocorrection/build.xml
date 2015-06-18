@@ -13,11 +13,12 @@
 	<property name="pluginFolderWin" value="C:/Goobi/plugins/step/" />
 	<property name="pluginFolderUnix" value="/opt/digiverso/goobi/plugins/step/" />
 
+
 	<path id="classpath">
-	    <fileset dir="/opt/digiverso/goobi-jsf2/lib"/> 
+	    <fileset dir="/opt/digiverso/goobilibs/lib"/>
 		<fileset dir="/opt/digiverso/libs" />
 	</path>
-
+    
 	<tstamp>
 		<format property="tstamped-file-name" pattern="yyyy-MM-dd" locale="en,UK" />
 	</tstamp>
