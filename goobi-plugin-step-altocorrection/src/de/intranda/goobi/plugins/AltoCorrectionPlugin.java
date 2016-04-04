@@ -6,6 +6,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +50,6 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
             String altoOutputFolder = process.getAltoDirectory();
             String pdfOutputFolder = process.getPdfDirectory();
 
-          
             List<Path> inputTifs = new ArrayList<>();
             Path altoFile = null;
             Path pdfInput = null;
@@ -67,11 +67,27 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
                 }
             }
             if (pdfInput == null || altoFile == null) {
+                if (pdfInput != null) {
+                    Path folder = Paths.get(altoOutputFolder);
+                    Path file = Paths.get(altoOutputFolder + "/" + pdfInput.toFile().getName());
+                    if (!Files.exists(folder)) {
+                        Files.createDirectories(folder);
+                    }
+                    Files.move(pdfInput, file, StandardCopyOption.REPLACE_EXISTING);
+                }
+                if (altoFile != null) {
+                    Path folder = Paths.get(pdfOutputFolder);
+                    Path file = Paths.get(pdfOutputFolder + "/" + altoFile.toFile().getName());
+                    if (!Files.exists(folder)) {
+                        Files.createDirectories(folder);
+                    }
+                    Files.move(altoFile, file, StandardCopyOption.REPLACE_EXISTING);
+                }
+                // if one exists, move it
                 Helper.setMeldung("Missing input data.");
                 return true;
-            } else {
-                // move to source folder
             }
+            // move to source folder
 
             File folder = new File(altoOutputFolder);
             if (!folder.exists()) {
@@ -81,7 +97,7 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
             if (!folder.exists()) {
                 folder.mkdirs();
             }
-            
+
             Collections.sort(inputTifs);
             PDDocument doc = PDDocument.load(pdfInput.toFile());
             AltoDeskewer.deskewAlto(altoFile, inputTifs, doc, Paths.get(altoOutputFolder));
