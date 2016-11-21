@@ -36,9 +36,11 @@ public class AltoDeskewer {
     private static String softwareVersion = "";
 
     private static int stringIdCount = 0;
-    public static void deskewAlto(Path altoFile, List<Path> inputTifs, PDDocument inputPdf, Path outputFolder) throws IOException, XMLStreamException {
+
+    public static void deskewAlto(Path altoFile, List<Path> inputTifs, PDDocument inputPdf, Path outputFolder) throws IOException,
+            XMLStreamException {
         PDDocumentCatalog catalog = inputPdf.getDocumentCatalog();
-        
+
         InputStream in = Files.newInputStream(altoFile);
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLStreamReader parser = factory.createXMLStreamReader(in);
@@ -106,19 +108,19 @@ public class AltoDeskewer {
                         if (writer != null) {
                             writeEndDocument(writer);
                         }
-                        currentInfo = ImageInformation.getInformation(inputTifs.get(pageCount).toFile(), (PDPage)catalog.getAllPages().get(pageCount));
-//                        System.out.println("processing " + currentInfo.getBasename());
-                       
-                        writer =
-                                output.createXMLStreamWriter(Files.newOutputStream(Paths.get(outputFolder.toString(), currentInfo.getBasename()
-                                        + ".xml")), encoding);
-                        
+                        currentInfo = ImageInformation.getInformation(inputTifs.get(pageCount).toFile(), (PDPage) catalog.getAllPages().get(
+                                pageCount));
+                        //                        System.out.println("processing " + currentInfo.getBasename());
+
+                        writer = output.createXMLStreamWriter(Files.newOutputStream(Paths.get(outputFolder.toString(), currentInfo.getBasename()
+                                + ".xml")), encoding);
+
                         pageCount++;
                         writeStartAndDescritption(writer);
                         copyElement(parser, writer);
                     } else if (parser.getLocalName().equals("PrintSpace")) {
-//                        currentInfo.addLargeSize(Float.parseFloat(parser.getAttributeValue(null, "WIDTH")), Float.parseFloat(parser
-//                                .getAttributeValue(null, "HEIGHT")));
+                        //                        currentInfo.addLargeSize(Float.parseFloat(parser.getAttributeValue(null, "WIDTH")), Float.parseFloat(parser
+                        //                                .getAttributeValue(null, "HEIGHT")));
                         deskewElement(parser, writer, currentInfo);
                     } else if (parser.getLocalName().equals("TextBlock")) {
                         deskewElement(parser, writer, currentInfo);
@@ -198,38 +200,35 @@ public class AltoDeskewer {
                 }
             }
         }
-        double top_left_x_new = (int)((Math.cos(-i.getAlpha()) * (top_left_x - (i.getLargeWidth() * 0.5)))
-                - (Math.sin(-i.getAlpha()) * (top_left_y - (i.getLargeLength() * 0.5))) + (i.getSmallWidth() * 0.5));
+        double top_left_x_new = (int) ((Math.cos(-i.getAlpha()) * (top_left_x - (i.getLargeWidth() * 0.5))) - (Math.sin(-i.getAlpha()) * (top_left_y
+                - (i.getLargeLength() * 0.5))) + (i.getSmallWidth() * 0.5));
 
-        double top_left_y_new = (int) ((Math.sin(-i.getAlpha()) * (top_left_x - (i.getLargeWidth() * 0.5)))
-                + (Math.cos(-i.getAlpha()) * (top_left_y - (i.getLargeLength() * 0.5))) + (i.getSmallLength() * 0.5));
-                
-        double bottom_right_x_new = (int)((Math.cos(-i.getAlpha()) * (bottom_right_x - (i.getLargeWidth() * 0.5)))
-                - (Math.sin(-i.getAlpha()) * (bottom_right_y - (i.getLargeLength() * 0.5))) + (i.getSmallWidth() * 0.5));
+        double top_left_y_new = (int) ((Math.sin(-i.getAlpha()) * (top_left_x - (i.getLargeWidth() * 0.5))) + (Math.cos(-i.getAlpha()) * (top_left_y
+                - (i.getLargeLength() * 0.5))) + (i.getSmallLength() * 0.5));
 
-        double bottom_right_y_new = (int) ((Math.sin(-i.getAlpha()) * (bottom_right_x - (i.getLargeWidth() * 0.5)))
-                + (Math.cos(-i.getAlpha()) * (bottom_right_y - (i.getLargeLength() * 0.5))) + (i.getSmallLength() * 0.5));
+        double bottom_right_x_new = (int) ((Math.cos(-i.getAlpha()) * (bottom_right_x - (i.getLargeWidth() * 0.5))) - (Math.sin(-i.getAlpha())
+                * (bottom_right_y - (i.getLargeLength() * 0.5))) + (i.getSmallWidth() * 0.5));
+
+        double bottom_right_y_new = (int) ((Math.sin(-i.getAlpha()) * (bottom_right_x - (i.getLargeWidth() * 0.5))) + (Math.cos(-i.getAlpha())
+                * (bottom_right_y - (i.getLargeLength() * 0.5))) + (i.getSmallLength() * 0.5));
 
         writer.writeStartElement(parser.getNamespaceURI(), parser.getLocalName());
         for (int j = 0; j < parser.getAttributeCount(); j++) {
             if (parser.getAttributeLocalName(j).equals("HPOS")) {
-//                System.out.println(((int) top_left_x_new));
+                //                System.out.println(((int) top_left_x_new));
                 writer.writeAttribute(parser.getAttributeLocalName(j), Integer.toString(((int) top_left_x_new)));
-            }
-            else if (parser.getAttributeLocalName(j).equals("VPOS")) {
-//                System.out.println((int) top_left_y_new);
+            } else if (parser.getAttributeLocalName(j).equals("VPOS")) {
+                //                System.out.println((int) top_left_y_new);
                 writer.writeAttribute(parser.getAttributeLocalName(j), Integer.toString(((int) top_left_y_new)));
-            }
-            else if (parser.getAttributeLocalName(j).equals("HEIGHT")) {
-                if(isPage) {
-                    writer.writeAttribute("HEIGHT", Integer.toString((int)i.getSmallLength()));
+            } else if (parser.getAttributeLocalName(j).equals("HEIGHT")) {
+                if (isPage) {
+                    writer.writeAttribute("HEIGHT", Integer.toString((int) i.getSmallLength()));
                 } else {
                     writer.writeAttribute(parser.getAttributeLocalName(j), Integer.toString(((int) (bottom_right_y_new - top_left_y_new))));
                 }
-            }
-            else if (parser.getAttributeLocalName(j).equals("WIDTH")) {
-                if(isPage) {
-                    writer.writeAttribute("WIDTH", Integer.toString((int)i.getSmallWidth()));
+            } else if (parser.getAttributeLocalName(j).equals("WIDTH")) {
+                if (isPage) {
+                    writer.writeAttribute("WIDTH", Integer.toString((int) i.getSmallWidth()));
                 } else {
                     writer.writeAttribute(parser.getAttributeLocalName(j), Integer.toString(((int) (bottom_right_x_new - top_left_x_new))));
                 }
@@ -242,15 +241,15 @@ public class AltoDeskewer {
                 }
             }
         }
-        if(isPage) {
-            if(parser.getAttributeValue(null, "HEIGHT") == null) {
-                writer.writeAttribute("HEIGHT", Integer.toString((int)i.getSmallLength()));
+        if (isPage) {
+            if (parser.getAttributeValue(null, "HEIGHT") == null) {
+                writer.writeAttribute("HEIGHT", Integer.toString((int) i.getSmallLength()));
             }
-            if(parser.getAttributeValue(null, "WIDTH") == null) {
-                writer.writeAttribute("WIDTH", Integer.toString((int)i.getSmallLength()));
+            if (parser.getAttributeValue(null, "WIDTH") == null) {
+                writer.writeAttribute("WIDTH", Integer.toString((int) i.getSmallLength()));
             }
         }
-        if(parser.getLocalName().equals("String") && parser.getAttributeValue(null, "ID") == null) {
+        if (parser.getLocalName().equals("String") && parser.getAttributeValue(null, "ID") == null) {
             writer.writeAttribute("ID", "String_" + stringIdCount++);
         }
     }
@@ -302,9 +301,9 @@ public class AltoDeskewer {
     }
 
     private static void copyElement(XMLStreamReader parser, XMLStreamWriter writer) throws XMLStreamException {
-//        if(parser.getLocalName().equals("Page") && parser.getAttributeValue(null, "ID").equals("Page52")) {
-//            System.out.println("blubb");
-//        }
+        //        if(parser.getLocalName().equals("Page") && parser.getAttributeValue(null, "ID").equals("Page52")) {
+        //            System.out.println("blubb");
+        //        }
         writer.writeStartElement(parser.getNamespaceURI(), parser.getLocalName());
         for (int j = 0; j < parser.getAttributeCount(); j++) {
             if (parser.getAttributeNamespace(j) == null) {

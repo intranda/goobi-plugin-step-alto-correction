@@ -108,7 +108,10 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
                 String tifName = inputTifs.get(i++).getFileName().toString();
                 String newName = tifName.substring(0, tifName.lastIndexOf('.')) + ".pdf";
                 sDoc.save(Paths.get(pdfOutputFolder, newName).toString());
+                sDoc.close();
             }
+            
+            doc.close();
         } catch (SwapException | DAOException | IOException | InterruptedException | XMLStreamException | COSVisitorException e) {
             logger.error(e);
             Helper.setFehlerMeldung(e);
