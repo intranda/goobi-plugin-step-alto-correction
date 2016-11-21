@@ -108,9 +108,11 @@ public class AltoDeskewer {
                         }
                         currentInfo = ImageInformation.getInformation(inputTifs.get(pageCount).toFile(), (PDPage)catalog.getAllPages().get(pageCount));
 //                        System.out.println("processing " + currentInfo.getBasename());
+                       
                         writer =
                                 output.createXMLStreamWriter(Files.newOutputStream(Paths.get(outputFolder.toString(), currentInfo.getBasename()
-                                        + ".xml")));
+                                        + ".xml")), encoding);
+                        
                         pageCount++;
                         writeStartAndDescritption(writer);
                         copyElement(parser, writer);
