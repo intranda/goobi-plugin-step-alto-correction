@@ -13,8 +13,6 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
-import net.xeoh.plugins.base.annotations.PluginImplementation;
-
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -29,6 +27,7 @@ import de.intranda.goobi.plugins.utils.AltoDeskewer;
 import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 @PluginImplementation
 public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlugin, IPlugin {
@@ -36,6 +35,7 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
     private static final String PLUGIN_NAME = "AltoCorrectionPlugin";
     private static final Logger logger = Logger.getLogger(AltoCorrectionPlugin.class);
 
+    @Override
     public String getTitle() {
         return PLUGIN_NAME;
     }
@@ -47,8 +47,8 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
             Process process = myStep.getProzess();
             String inputFolder;
             inputFolder = process.getImagesTifDirectory(false);
-            String altoOutputFolder = process.getAltoDirectory();
-            String pdfOutputFolder = process.getPdfDirectory();
+            String altoOutputFolder = process.getOcrAltoDirectory();
+            String pdfOutputFolder = process.getOcrPdfDirectory();
 
             List<Path> inputTifs = new ArrayList<>();
             Path altoFile = null;
@@ -110,7 +110,7 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
                 sDoc.save(Paths.get(pdfOutputFolder, newName).toString());
                 sDoc.close();
             }
-            
+
             doc.close();
         } catch (SwapException | DAOException | IOException | InterruptedException | XMLStreamException | COSVisitorException e) {
             logger.error(e);
