@@ -14,9 +14,8 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.log4j.Logger;
-import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.util.Splitter;
 import org.goobi.beans.Process;
 import org.goobi.production.enums.PluginGuiType;
 import org.goobi.production.plugin.interfaces.AbstractStepPlugin;
@@ -112,7 +111,7 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
             }
 
             doc.close();
-        } catch (SwapException | DAOException | IOException | InterruptedException | XMLStreamException | COSVisitorException e) {
+        } catch (SwapException | DAOException | IOException | InterruptedException | XMLStreamException e) {
             logger.error(e);
             Helper.setFehlerMeldung(e);
             return false;

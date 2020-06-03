@@ -18,7 +18,6 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
-import org.apache.pdfbox.pdmodel.PDPage;
 
 public class AltoDeskewer {
     private static String version;
@@ -38,7 +37,7 @@ public class AltoDeskewer {
     private static int stringIdCount = 0;
 
     public static void deskewAlto(Path altoFile, List<Path> inputTifs, PDDocument inputPdf, Path outputFolder) throws IOException,
-            XMLStreamException {
+    XMLStreamException {
         PDDocumentCatalog catalog = inputPdf.getDocumentCatalog();
 
         InputStream in = Files.newInputStream(altoFile);
@@ -77,7 +76,7 @@ public class AltoDeskewer {
                     if (parser.getLocalName().equals("alto")) {
                         altoNS = parser.getNamespaceURI();
                         for (int j = 0; j < parser.getNamespaceCount(); j++) {
-                            namespaceList.add(new SimpleEntry<String, String>(parser.getNamespacePrefix(j), parser.getNamespaceURI(j)));
+                            namespaceList.add(new SimpleEntry<>(parser.getNamespacePrefix(j), parser.getNamespaceURI(j)));
                         }
                         schemaLocation = parser.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation");
                     } else if (parser.getLocalName().equals("Description")) {
@@ -108,7 +107,7 @@ public class AltoDeskewer {
                         if (writer != null) {
                             writeEndDocument(writer);
                         }
-                        currentInfo = ImageInformation.getInformation(inputTifs.get(pageCount).toFile(), (PDPage) catalog.getAllPages().get(
+                        currentInfo = ImageInformation.getInformation(inputTifs.get(pageCount).toFile(), catalog.getPages().get(
                                 pageCount));
                         //                        System.out.println("processing " + currentInfo.getBasename());
 
