@@ -24,7 +24,6 @@ import org.goobi.production.plugin.interfaces.IStepPlugin;
 
 import de.intranda.goobi.plugins.utils.AltoDeskewer;
 import de.sub.goobi.helper.Helper;
-import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
@@ -111,7 +110,7 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
             }
 
             doc.close();
-        } catch (SwapException | DAOException | IOException | InterruptedException | XMLStreamException e) {
+        } catch (SwapException | IOException  | XMLStreamException e) {
             logger.error(e);
             Helper.setFehlerMeldung(e);
             return false;
