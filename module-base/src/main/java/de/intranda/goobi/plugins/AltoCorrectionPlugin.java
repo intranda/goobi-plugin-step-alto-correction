@@ -14,6 +14,7 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.log4j.Logger;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.goobi.beans.Process;
@@ -97,7 +98,7 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
             }
 
             Collections.sort(inputTifs);
-            PDDocument doc = PDDocument.load(pdfInput.toFile());
+            PDDocument doc = Loader.loadPDF(pdfInput.toFile());
             AltoDeskewer.deskewAlto(altoFile, inputTifs, doc, Paths.get(altoOutputFolder));
             Splitter splitter = new Splitter();
             List<PDDocument> splitList = splitter.split(doc);
@@ -110,7 +111,7 @@ public class AltoCorrectionPlugin extends AbstractStepPlugin implements IStepPlu
             }
 
             doc.close();
-        } catch (SwapException | IOException  | XMLStreamException e) {
+        } catch (SwapException | IOException | XMLStreamException e) {
             logger.error(e);
             Helper.setFehlerMeldung(e);
             return false;
